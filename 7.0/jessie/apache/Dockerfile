@@ -32,9 +32,21 @@ ENV PHPIZE_DEPS \
 RUN apt-get update && apt-get install -y \
 		$PHPIZE_DEPS \
 		ca-certificates \
-		curl \
 		xz-utils \
 	--no-install-recommends && rm -r /var/lib/apt/lists/*
+
+# install newer curl from source
+RUN apt-get update \
+    && apt-get install -y libssl-dev wget \
+    && wget https://curl.haxx.se/download/curl-7.53.1.tar.gz \
+    && tar -xzf curl-7.53.1.tar.gz \
+    && cd curl-7.53.1 \
+    && ./configure --with-ssl --prefix=/usr \
+    && make \
+    && make install \
+    && ldconfig \
+    && rm -rf curl-7.53.1 \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV PHP_INI_DIR /usr/local/etc/php
 RUN mkdir -p $PHP_INI_DIR/conf.d
@@ -163,10 +175,8 @@ RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		libcurl4-openssl-dev \
 		libedit-dev \
 		libsqlite3-dev \
-		libssl-dev \
 		libxml2-dev \
 		zlib1g-dev \
 		${PHP_EXTRA_BUILD_DEPS:-} \
