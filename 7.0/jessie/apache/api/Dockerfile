@@ -52,6 +52,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN php -r "copy('$COMPOSER_URL', '/usr/bin/composer.phar');"
 RUN chmod +x /usr/bin/composer.phar
 COPY composer-entrypoint /composer-entrypoint
+RUN chmod +x /composer-entrypoint
 
 WORKDIR /var/www/html
 
