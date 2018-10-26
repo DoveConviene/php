@@ -44,6 +44,14 @@ RUN echo "date.timezone = \"Europe/Rome\"" > /usr/local/etc/php/conf.d/date.ini
 
 RUN a2enmod rewrite
 
+# composer
+ENV COMPOSER_URL="https://getcomposer.org/download/1.4.2/composer.phar"
+ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN php -r "copy('$COMPOSER_URL', '/usr/bin/composer.phar');"
+RUN chmod +x /usr/bin/composer.phar
+COPY composer-entrypoint /composer-entrypoint
+RUN chmod +x /composer-entrypoint
+
 WORKDIR /var/www/html
 
 EXPOSE 80
