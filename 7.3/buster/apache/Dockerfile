@@ -34,10 +34,24 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends \
 		$PHPIZE_DEPS \
 		ca-certificates \
-		curl \
 		xz-utils \
 	; \
 	rm -rf /var/lib/apt/lists/*
+
+# install newer curl from source
+RUN apt-get update \
+    && apt-get install -y libssl-dev wget \
+    && wget https://curl.haxx.se/download/curl-7.61.1.tar.gz \
+    && tar -xzf curl-7.61.1.tar.gz \
+    && cd curl-7.61.1 \
+    && ./configure --with-ssl --prefix=/usr \
+    && make \
+    && make install \
+    && ldconfig \
+    && rm -rf curl-7.61.1 \
+    && rm -rf /var/lib/apt/lists/*
+
+
 
 ENV PHP_INI_DIR /usr/local/etc/php
 RUN set -eux; \
@@ -170,11 +184,9 @@ RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		libargon2-dev \
-		libcurl4-openssl-dev \
 		libedit-dev \
 		libsodium-dev \
 		libsqlite3-dev \
-		libssl-dev \
 		libxml2-dev \
 		zlib1g-dev \
 		${PHP_EXTRA_BUILD_DEPS:-} \
