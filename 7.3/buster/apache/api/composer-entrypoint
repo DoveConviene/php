@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+# Provide github token if you are using composer a lot in non-interactive mode
+# Otherwise one day it will get stuck with request for authorization
+# https://github.com/settings/tokens
+if [[ ! -z "$COMPOSER_GITHUB_TOKEN" ]]
+then
+  composer.phar config --global github-oauth.github.com "$COMPOSER_GITHUB_TOKEN"
+fi
+exec "$@"
