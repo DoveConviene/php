@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install patch
 RUN echo "date.timezone = \"Europe/Rome\"" > /usr/local/etc/php/conf.d/date.ini
 
 RUN a2enmod rewrite
+RUN a2enmod headers
 
 # composer
 ENV COMPOSER_URL="https://getcomposer.org/download/1.9.0/composer.phar"
